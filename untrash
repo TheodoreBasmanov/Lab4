@@ -12,9 +12,9 @@ echo ${stringarray[$1]} "- is that the file you want to revive? [y/n]"
 read answer
 if [[ "$answer" == "y" ]]
 then
-path=${stringarray[$i]}
+path="${stringarray[$i]}"
 let i=$i\+1
-link=${stringarray[$i]}
+link="${stringarray[$i]}"
 break
 fi
 fi
@@ -24,10 +24,11 @@ then
 echo "You've seem to have chosen nothing..." 1>&2
 exit -1
 fi
-dir={dirname $path}
+dir=$(dirname $path)
 dir+="/"
-file={basename $path}
-[[ -d dir ]] ||
+file=$(basename $path)
+echo $dir $file
+[[ -d $dir ]] ||
 {
 echo "The directory you want to revive your file in doesn't exist. The file will be revived in the home directory."
 dir="~/"
