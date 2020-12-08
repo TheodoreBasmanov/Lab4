@@ -7,9 +7,9 @@ link=""
 for (( i=0; i<$arrLen; i++ ))
 do
 if [[ $i\%2 -eq 0 ]]
-then
-echo ${stringarray[$i]} "- is that the file you want to revive? [y/n]"
-read answer 
+then 
+echo ${stringarray[$1]} "- is that the file you want to revive? [y/n]"
+read answer
 if [[ "$answer" == "y" ]]
 then
 path=${stringarray[$i]}
@@ -20,8 +20,22 @@ fi
 fi
 done
 if [[ "$path" == "" ]]
-then
+then 
 echo "You've seem to have chosen nothing..." 1>&2
 exit -1
 fi
-echo $path $link
+dir={dirname $path}
+dir+="/"
+file={basename $path}
+[[ -d dir ]] ||
+{
+echo "The directory you want to revive your file in doesn't exist. The file will be revived in the home directory."
+dir="~/"
+}
+while [[ -f $dir$file ]]
+do
+echo "The file with that name $file already exists. Please renme the file:"
+read file
+done
+ln ~/.trash/$link $dir$file
+rm ~/.trash/$link

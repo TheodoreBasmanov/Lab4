@@ -1,9 +1,12 @@
 #!/bin/bash
-[[ -f $1 ]] || echo "The file you are trying to move to trash doesn't exist." 1>&2; exit -1
+[[ -f $1 ]] || 
+{ 
+echo "The file you are trying to move to trash doesn't exist." 1>&2 
+exit -1
+}
 [[ -d ~/.trash ]] || mkdir ~/.trash
 linkName=1
 fullName=$(readlink -f $1)
-echo $fullName
 while [[ -f ~/.trash/$linkName ]]
 do 
 let linkName=$linkName\+1
