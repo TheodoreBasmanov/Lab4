@@ -1,4 +1,14 @@
 #!/bin/bash
+[[ -d ~/.trash ]] ||
+{
+echo "The trash directory seems to be deleted." 1>&2
+exit -1
+}
+[[ -f ~/.trash.log ]] ||
+{
+echo "The trash.log file seems to be deleted." 1>&2
+exit -1
+}
 search=$(cat ~/.trash.log | grep $1)
 stringarray=($search)
 arrLen=${#stringarray[@]}
@@ -28,7 +38,7 @@ dir=$(dirname $path)
 dir+="/"
 file=$(basename $path)
 echo $dir $file
-[[ -d $dir ]] ||
+[[ -d dir ]] ||
 {
 echo "The directory you want to revive your file in doesn't exist. The file will be revived in the home directory."
 dir="~/"
