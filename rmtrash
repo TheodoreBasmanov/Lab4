@@ -1,0 +1,12 @@
+#!/bin/bash
+[[ -d ~/.trash ]] || mkdir ~/.trash
+linkName=1
+fullName=$(readlink -f $1)
+echo $fullName
+while [[ -f ~/.trash/$linkName ]]
+do 
+let linkName=$linkName\+1
+done
+ln $1 ~/.trash/$linkName
+rm $1
+echo $fullName" " $linkName >> ~/.trash.log
