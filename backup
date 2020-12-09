@@ -33,12 +33,33 @@ arrLen=${#stringarray[@]}
 if [[ "$flag" -eq 0 ]]
 then
 mkdir ~/$dir
-echo -ne $dir $(date '+%Y-%m-%d') $arrLen" ">> ~/$report 
+echo -ne $dir $(date '+%Y-%m-%d') $arrLen" 0 ">> ~/$report 
 for (( i=0; i<$arrLen; i++ ))
 do
 echo -ne ${stringarray[$i]}" " >> ~/$report
 ln ~/source/${stringarray[$i]} ~/$dir/${stringarray[$i]}
 done
 echo " " >> ~/$report
+else
+newFiles=("")
+oldFiles=("")
+for (( i=0; i<$arrLen; i++ ))
+do
+if [[ -f ~/$dir/${stringarray[$i]} ]]
+then
+ln ~/source/${stringarray[$i]} ~/$dir/${stringarray[$i]}
+newFiles+=(${stringarray[$i]})
+else
+if [[ ! $("%s" ~/source/${stringarray[$i]}) -eq $("%s" ~/$dir/${stringarray[$i]}) ]]
+then
+mv ~/$dir/${stringarray[$i]} "~/$dir/${stringarray[$i]}.$(date '+%Y-%m-%d')"
+ln ~/source/${stringarray[$i]} ~/$dir/${stringarray[$i]}
+oldFiles+=(${stringarray[$i]})
 fi
+fi
+done
+echo $newFiles
+echo $oldFiles
+fi
+
 
