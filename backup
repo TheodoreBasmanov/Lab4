@@ -1,0 +1,24 @@
+#!/bin/bash
+date=$(date --date="7 days ago" +"%Y-%m-%d")
+dirs=$(ls ~ | grep "Backup")
+stringarray=($dirs)
+arrLen=${#stringarray[@]}
+flag=0;
+dir=""
+for (( i=0; i<$arrLen; i++ ))
+do
+currDir=${stringarray[$i]}
+dirDate=${currDir:7}
+if [[ "$dirDate">"$date" ]]
+then
+let flag=$flag\+1
+dir=$currDir
+break
+fi
+done
+if [[ "$flag" -eq 0 ]]
+then
+dir="Backup-"$(date '+%Y-%m-%d')
+fi
+
+
