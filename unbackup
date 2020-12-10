@@ -1,0 +1,50 @@
+#!/bin/bash
+[[ -f ~/backup-report ]] ||
+{
+echo "The backup report file seemf to me missing." 1>&2
+exit -1
+}
+dirs=$(ls ~ | grep "Backup")
+stringarray=($dirs)
+arrLen=${#stringarray[@]}
+if [[ $arrLen -eq 0 ]]
+then
+echo "There are no backup direcotories are available." 1>&2
+exit -1
+fi
+dir=${stringarray[0]}
+date=${currDir:7}
+for (( i=0; i<$arrLen; i++ ))
+do
+currDir=${stringarray[$i]}
+dirDate=${currDir:7}
+if [[  "$dirDate">"$date" ]]
+then
+dir=$currDir
+date=$dirDate
+fi
+done
+report=$(grep $dir ~/backup-report | tail -1)
+stringarray=($report)
+files=$(ls ~/$dir)
+stringarray1=($files)
+if [[ ${stringarray[2]} -eq ${#stringarray1[@]}\/2 ]]
+then
+echo "There are no files to backup."
+exit 0
+fi
+for (( i=3\+${stringarray[2]}; i<${#stringarray[@]}; i++ ))
+do
+stringarray1=("${stringarray1[@]/$stringarray[$i]}")
+done
+numberFiles=${#stringarray1[@]}
+for (( i=4; i<$numberFiles; i++ ))
+do
+if [[ -f ~/source/${stringarray1[$i]} ]]
+then
+echo "The file ${stringarray[$i]} can't be unbackped, because a file with such name already exists in the source directory."
+else
+cp ~/$dir/${stringarray1[$i]} ~/source/${stringarray1[$i]}
+fi
+done
+
