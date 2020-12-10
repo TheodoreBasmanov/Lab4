@@ -37,7 +37,7 @@ echo -ne $dir $(date '+%Y-%m-%d') $arrLen" 0 ">> ~/$report
 for (( i=0; i<$arrLen; i++ ))
 do
 echo -ne ${stringarray[$i]}" " >> ~/$report
-ln ~/source/${stringarray[$i]} ~/$dir/${stringarray[$i]}
+cp ~/source/${stringarray[$i]} ~/$dir/${stringarray[$i]}
 done
 echo " " >> ~/$report
 else
@@ -45,15 +45,18 @@ newFiles=("")
 oldFiles=("")
 for (( i=0; i<$arrLen; i++ ))
 do
-if [[ -f ~/$dir/${stringarray[$i]} ]]
+echo $(stat -c"%s" ~/source/${stringarray[$i]}) $(stat -c"%s" ~/$dir/${stringarray[$i]})
+if [[ ! -f ~/$dir/${stringarray[$i]} ]]
 then
-ln ~/source/${stringarray[$i]} ~/$dir/${stringarray[$i]}
+cp ~/source/${stringarray[$i]} ~/$dir/${stringarray[$i]}
 newFiles+=(${stringarray[$i]})
 else
-if [[ ! $("%s" ~/source/${stringarray[$i]}) -eq $("%s" ~/$dir/${stringarray[$i]}) ]]
+#echo $(stat -c"%s" ~/source/${stringarray[$i]}) $(stat -c"%s" ~/$dir/${stringarray[$i]})
+if [[ ! $(stat -c"%s" ~/source/${stringarray[$i]}) -eq $(stat -c"%s" ~/$dir/${stringarray[$i]}) ]]
 then
-mv ~/$dir/${stringarray[$i]} "~/$dir/${stringarray[$i]}.$(date '+%Y-%m-%d')"
-ln ~/source/${stringarray[$i]} ~/$dir/${stringarray[$i]}
+echo "scheisse"
+mv ~/$dir/${stringarray[$i]} ~/$dir/${stringarray[$i]}.$(date '+%Y-%m-%d')
+cp ~/source/${stringarray[$i]} ~/$dir/${stringarray[$i]}
 oldFiles+=(${stringarray[$i]})
 fi
 fi
