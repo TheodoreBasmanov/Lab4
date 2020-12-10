@@ -41,28 +41,33 @@ cp ~/source/${stringarray[$i]} ~/$dir/${stringarray[$i]}
 done
 echo " " >> ~/$report
 else
-newFiles=("")
-oldFiles=("")
+newFiles=()
+oldFiles=()
 for (( i=0; i<$arrLen; i++ ))
 do
-echo $(stat -c"%s" ~/source/${stringarray[$i]}) $(stat -c"%s" ~/$dir/${stringarray[$i]})
 if [[ ! -f ~/$dir/${stringarray[$i]} ]]
 then
 cp ~/source/${stringarray[$i]} ~/$dir/${stringarray[$i]}
 newFiles+=(${stringarray[$i]})
 else
-#echo $(stat -c"%s" ~/source/${stringarray[$i]}) $(stat -c"%s" ~/$dir/${stringarray[$i]})
 if [[ ! $(stat -c"%s" ~/source/${stringarray[$i]}) -eq $(stat -c"%s" ~/$dir/${stringarray[$i]}) ]]
 then
-echo "scheisse"
 mv ~/$dir/${stringarray[$i]} ~/$dir/${stringarray[$i]}.$(date '+%Y-%m-%d')
 cp ~/source/${stringarray[$i]} ~/$dir/${stringarray[$i]}
 oldFiles+=(${stringarray[$i]})
 fi
 fi
 done
-echo $newFiles
-echo $oldFiles
+echo -ne $dir $(date '+%Y-%m-%d') ${#newFiles[@]} ${#oldFiles[@]}" " >> ~/$report
+for i in "${newFiles[@]}"
+do
+echo -ne $i" " >> ~/$report
+done
+for i in "${oldFiles[@]}"
+do
+echo -ne $i" "$i.$(date '+%Y-%m-%d')" " >> ~/$report
+done
+echo " " >> ~/$report
 fi
 
 
