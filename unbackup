@@ -28,23 +28,27 @@ report=$(grep $dir ~/backup-report | tail -1)
 stringarray=($report)
 files=$(ls ~/$dir)
 stringarray1=($files)
-if [[ ${stringarray[2]} -eq ${#stringarray1[@]}\/2 ]]
+if [[ ${stringarray[3]} -eq ${#stringarray1[@]}\/2 ]]
 then
 echo "There are no files to backup."
 exit 0
 fi
-for (( i=3\+${stringarray[2]}; i<${#stringarray[@]}; i++ ))
+editFiles=()
+for (( i=4\+${stringarray[2]}; i<${#stringarray[@]}; i++ ))
 do
-stringarray1=("${stringarray1[@]/$stringarray[$i]}")
+editFiles+=(${stringarray[$i]})
 done
 numberFiles=${#stringarray1[@]}
-for (( i=4; i<$numberFiles; i++ ))
+for (( i=0; i<$numberFiles; i++ ))
 do
+if [[ ! " ${editFiles[@]} " =~ " ${stringarray1[$i]} " ]]
+then
 if [[ -f ~/source/${stringarray1[$i]} ]]
 then
-echo "The file ${stringarray[$i]} can't be unbackped, because a file with such name already exists in the source directory."
+echo "The file ${stringarray1[$i]} can't be unbackped, because a file with such name already exists in the source directory."
 else
 cp ~/$dir/${stringarray1[$i]} ~/source/${stringarray1[$i]}
+fi
 fi
 done
 
