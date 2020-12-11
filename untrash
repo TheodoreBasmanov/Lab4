@@ -9,7 +9,7 @@ exit -1
 echo "The trash.log file seems to be deleted." 1>&2
 exit -1
 }
-search=$(cat ~/.trash.log | grep $1)
+search=$(cat ~/.trash.log | grep /$1)
 stringarray=($search)
 arrLen=${#stringarray[@]}
 path=""

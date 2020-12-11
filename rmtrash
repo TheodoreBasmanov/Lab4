@@ -1,16 +1,17 @@
 #!/bin/bash
-[[ -f $1 ]] || 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+[[ -f $DIR/$1 ]] || 
 { 
 echo "The file you are trying to move to trash doesn't exist." 1>&2 
 exit -1
 }
 [[ -d ~/.trash ]] || mkdir ~/.trash
 linkName=1
-fullName=$(readlink -f $1)
+fullName=$DIR/$1
 while [[ -f ~/.trash/$linkName ]]
 do 
 let linkName=$linkName\+1
 done
-ln $1 ~/.trash/$linkName
-rm $1
+ln $fullName ~/.trash/$linkName
+rm $fullName
 echo $fullName" " $linkName >> ~/.trash.log
